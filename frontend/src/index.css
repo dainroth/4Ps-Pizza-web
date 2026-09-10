@@ -5,6 +5,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  --color-ink: #1F2A1E;
+  --color-parchment: #F6F1E4;
+  --color-clay: #C97B3D;
+  --color-sage: #8A9B6E;
+  --color-cream: #FBF8F1;
+}
+
+
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: 'Inter Variable', sans-serif;
