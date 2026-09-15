@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Outlet, Link, NavLink } from "react-router-dom";
 
 const navLinks = [
@@ -8,25 +9,45 @@ const navLinks = [
 ];
 
 export default function SiteLayout() {
+  const [isScroll, setIsScroll] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScroll(true);
+      } else {
+        setIsScroll(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const textClass = isScroll ? "text-[var(--color-ink)]" : "text-white";
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="flex items-center justify-between px-6 md:px-12 py-6">
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 flex items-center justify-between px-6 md:px-12 py-6 ${
+          isScroll
+            ? "bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm"
+            : "bg-transparent border-b border-transparent"
+        }`}
+      >
         <Link
           to="/"
-          className="font-display text-xl tracking-tight text-[var(--color-ink)]"
+          className={`font-display text-xl tracking-widest transition-colors duration-300 ${textClass}`}
         >
-          Kravan
+          PIZZA 4P'S
         </Link>
+
         <nav className="hidden md:flex items-center gap-8 text-sm">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
-                `transition-colors hover:text-[var(--color-clay)] ${
-                  isActive
-                    ? "text-[var(--color-clay)]"
-                    : "text-[var(--color-ink)]"
+                `transition-colors duration-300 hover:text-[#02499D] ${
+                  isActive ? "text-[#02499D]" : textClass
                 }`
               }
             >
@@ -34,9 +55,14 @@ export default function SiteLayout() {
             </NavLink>
           ))}
         </nav>
+
         <Link
           to="/login"
-          className="text-sm border border-[var(--color-ink)] rounded-full px-4 py-2 hover:bg-[var(--color-ink)] hover:text-[var(--color-parchment)] transition-colors"
+          className={`text-sm border rounded-full px-4 py-2 transition-colors duration-300 ${
+            isScroll
+              ? "border-[var(--color-ink)] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-parchment)]"
+              : "border-white text-white hover:bg-white hover:text-black"
+          }`}
         >
           Sign in
         </Link>
