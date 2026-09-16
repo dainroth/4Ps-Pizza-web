@@ -3,11 +3,39 @@ import { Link } from "react-router-dom";
 
 export default function Signup() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: call POST /auth/signup once backend is built
-    console.log("Signup:", form);
+    setMessage("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:4000/api/user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        setMessage(data.message || "Unable to create account.");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      setMessage("Account created successfully.");
+      setForm({ name: "", email: "", password: "" });
+    } catch (error) {
+      console.error(error);
+      setMessage("Unable to connect to the server.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -65,11 +93,18 @@ export default function Signup() {
 
           <button
             type="submit"
+            disabled={isLoading}
             className="mt-2 w-full rounded-full bg-[#242E52] px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-[#02499D]"
           >
-            Sign up
+            {isLoading ? "Creating account..." : "Sign up"}
           </button>
         </form>
+
+        {message && (
+          <p className="mt-4 text-center text-sm font-medium text-[#242E52]">
+            {message}
+          </p>
+        )}
 
         <p className="mt-6 text-center text-sm text-[#242E52]/70">
           Already have an account?{" "}
