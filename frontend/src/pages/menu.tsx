@@ -1,6 +1,28 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const menuData = [
+type ApiItem = {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  category?: string;
+  image?: string;
+  imageUrl?: string;
+};
+
+type MenuItem = {
+  name: string;
+  desc: string;
+  tag: string | null;
+  img?: string;
+};
+
+type MenuGroup = {
+  category: string;
+  items: MenuItem[];
+};
+
+const menuData: MenuGroup[] = [
   {
     category: "Classics",
     items: [
@@ -84,9 +106,62 @@ const menuData = [
 ];
 
 export default function Menu() {
+  const [items, setItems] = useState<ApiItem[]>([]);
   const [active, setActive] = useState(menuData[0].category);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const menuGroups = useMemo(() => {
+    if (!items.length) {
+      return menuData;
+    }
+
+    return items.reduce<MenuGroup[]>((groups, item) => {
+      const category = item.category || "Menu";
+      const existing = groups.find((group) => group.category === category);
+      const menuItem: MenuItem = {
+        name: item.name,
+        desc: item.description,
+        tag: null,
+        img: item.imageUrl || item.image,
+      };
+
+      if (existing) {
+        existing.items.push(menuItem);
+      } else {
+        groups.push({ category, items: [menuItem] });
+      }
+
+      return groups;
+    }, []);
+  }, [items]);
+
   const activeGroup =
-    menuData.find((g) => g.category === active) || menuData[0];
+    menuGroups.find((g) => g.category === active) || menuGroups[0];
+
+  useEffect(() => {
+    const loadItems = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/api/items");
+        if (!response.ok) {
+          throw new Error("Could not load menu items");
+        }
+
+        const data = await response.json();
+        setItems(Array.isArray(data) ? data : []);
+        if (Array.isArray(data) && data.length > 0) {
+          setActive(data[0].category || "Menu");
+        }
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Could not load menu items",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadItems();
+  }, []);
 
   return (
     <section className="px-6 md:px-16 py-16 md:py-24 bg-[#f8f4ee] text-[#242E52]">
@@ -120,7 +195,7 @@ export default function Menu() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {menuData.map((group) => {
+            {menuGroups.map((group) => {
               const isActive = active === group.category;
               return (
                 <button
@@ -148,6 +223,14 @@ export default function Menu() {
               {String(activeGroup.items.length).padStart(2, "0")}
             </span>
           </div>
+
+          {loading && (
+            <p className="mb-8 text-sm text-[#3d0c11]/60">Loading menu...</p>
+          )}
+
+          {error && !loading && (
+            <p className="mb-8 text-sm text-[#3d0c11]/60">{error}</p>
+          )}
 
           <div className="grid sm:grid-cols-2 gap-x-12 gap-y-10">
             {activeGroup.items.map((item, index) => (
