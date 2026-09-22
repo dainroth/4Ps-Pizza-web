@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "@/lib/auth";
+import { useAuth } from "@/context/authContext";
 
 export default function Signup() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -12,24 +16,12 @@ export default function Signup() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:4000/api/user/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
+      const data = await registerUser(form.name, form.email, form.password);
 
-      const data = await response.json();
-
-      if (!data.success) {
-        setMessage(data.message || "Unable to create account.");
-        return;
+      if (data.success && data.token && data.user) {
+        login(data.token, data.user);
+        navigate("/reserve");
       }
-
-      localStorage.setItem("token", data.token);
-      setMessage("Account created successfully.");
-      setForm({ name: "", email: "", password: "" });
     } catch (error) {
       console.error(error);
       setMessage("Unable to connect to the server.");

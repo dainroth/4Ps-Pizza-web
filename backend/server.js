@@ -3,8 +3,17 @@ import express from "express";
 import "dotenv/config";
 import { connectDB } from "./config/db.js";
 import userRouter from "./routes/userRoute.js";
+
+import path from "path";
+import { fileURLToPath } from "url";
+import itemRouter from "./routes/itemsRoute.js";
+import reservationRouter from "./routes/reservationRoute.js";
+
 const app = express();
 const port = process.env.PORT || 4000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // middleware
 app.use(
@@ -23,16 +32,23 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// connect db
-connectDB();
-
 // route
 app.use("/api/user", userRouter);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/items", itemRouter);
+app.use("/api/reservations", reservationRouter);
 
 app.get("/", (req, res) => {
   res.send("API WORKING");
 });
 
-app.listen(port, () => {
-  console.log(`Server started on http://localhost:${port}`);
-});
+connectDB()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server started on http://localhost:${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("DB connection failed:", err.message);
+    process.exit(1);
+  });
