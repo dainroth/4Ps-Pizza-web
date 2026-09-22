@@ -168,7 +168,7 @@ export default function UserRate() {
               swiperRef.current = swiper;
             }}
             onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-            className="h-[380px] w-full max-w-[380px]"
+            className="h-[450px] w-full max-w-[400px]"
           >
             {reviews.map((review) => (
               <SwiperSlide

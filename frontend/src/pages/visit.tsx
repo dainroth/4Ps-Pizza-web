@@ -1,4 +1,10 @@
-import { MessageCircle } from "lucide-react";
+import {
+  ArrowUpRight,
+  Clock,
+  MapPin,
+  MessageCircle,
+  Phone,
+} from "lucide-react";
 
 const mapEmbedUrl =
   "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15635.106659208204!2d104.92037611738282!3d11.567861900000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3109511ac9974107%3A0x95cc4e2d790d6ea9!2sPizza%204P's%20313%20Quayside!5e0!3m2!1sen!2skh!4v1790046549034!5m2!1sen!2skh";
@@ -51,52 +57,67 @@ export default function Visit() {
           </div>
 
           {/* Info panel */}
-          <div className="rounded-2xl bg-white/5 p-8">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/50">
-                Hours
-              </p>
-              <div className="mt-3 space-y-1.5 text-sm">
-                <p>Mon–Fri · 11:00–22:00</p>
-                <p>Sat–Sun · 10:00–23:00</p>
+          <div className="flex flex-col justify-between rounded-2xl bg-white/5 p-8">
+            <div className="flex gap-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10">
+                <Clock className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/50">
+                  Hours
+                </p>
+                <div className="mt-2 space-y-1 text-sm text-white/85">
+                  <p>Mon–Fri · 11:00–22:00</p>
+                  <p>Sat–Sun · 10:00–23:00</p>
+                </div>
               </div>
             </div>
 
-            <div className="mt-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/50">
-                Phone
-              </p>
-              <p className="mt-2 text-sm font-medium">+855 23 63 62 000</p>
+            <div className="h-px bg-white/10" />
+
+            <div className="flex gap-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10">
+                <Phone className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/50">
+                  Phone
+                </p>
+                <a
+                  href="tel:+85523636200"
+                  className="mt-2 block text-sm font-medium text-white/85 hover:text-white"
+                >
+                  +855 23 63 62 000
+                </a>
+              </div>
             </div>
 
-            <div className="mt-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/50">
-                Email
-              </p>
-            </div>
+            <div className="h-px bg-white/10" />
 
-            <div className="mt-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/50">
-                Follow us
-              </p>
-              <div className="mt-3 flex gap-3">
-                <a
-                  href="#"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition-colors hover:bg-white/10"
-                  aria-label="Instagram"
-                >
-                  {/* <Instagram className="h-4 w-4" /> */}
-                </a>
-                <a
-                  href="#"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition-colors hover:bg-white/10"
-                  aria-label="WhatsApp"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                </a>
+            <div className="flex gap-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10">
+                <MapPin className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/50">
+                  Address
+                </p>
+                <p className="mt-2 text-sm text-white/85">
+                  F02-01 Street 1 Presh, 12300, <br /> Preah Sisowath Quay,
+                  Phnom Penh
+                </p>
               </div>
             </div>
           </div>
+          <a
+            href="https://maps.app.goo.gl/pdnPzyzNYpk2i4bH6"
+            target="_blank"
+            rel="noreferrer"
+            className="group mt-10 flex items-center justify-between rounded-xl border border-white/15 px-5 py-4 text-sm font-semibold uppercase tracking-wide transition-colors hover:bg-white/10"
+          >
+            Get directions
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </a>
         </div>
       </div>
     </section>

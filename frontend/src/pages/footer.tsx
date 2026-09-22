@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <footer className="  bg-[#f8f4ee] px-8 py-14 text-[#242E52] md:px-12">
-      <div className=" border-t border-t-[#242E52] pt-10" />
       <div className="mx-auto max-w-full">
+        <div className=" border-t border-t-[#242E52] pt-10" />
         {/* Main Footer */}
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_1fr_1fr]">
           {/* Logo */}

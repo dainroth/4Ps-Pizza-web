@@ -4,9 +4,15 @@ import { registerUser } from "@/lib/auth";
 import { useAuth } from "@/context/authContext";
 
 export default function Signup() {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -21,6 +27,8 @@ export default function Signup() {
       if (data.success && data.token && data.user) {
         login(data.token, data.user);
         navigate("/reserve");
+      } else {
+        setMessage(data.message || "Unable to create your account.");
       }
     } catch (error) {
       console.error(error);
@@ -31,83 +39,177 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-80px)] items-center justify-center bg-[var(--color-cream,#fdfbf7)] px-6 py-12">
-      <section className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm border border-[#242E52]/10 md:p-10">
-        <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-[#242E52] md:text-4xl">
-          Create an account
-        </h1>
-        <p className="mt-2 text-sm text-[#242E52]/70">
-          Join us to experience artisanal slices and zero waste.
-        </p>
+    <div className="min-h-[calc(100vh-80px)] bg-[#f8f5ef] px-6 py-25 md:px-10">
+      <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-6xl items-center justify-center">
+        <div className="grid w-full overflow-hidden rounded-[28px] border border-[#242E52]/10 bg-white shadow-[0_20px_60px_rgba(36,46,82,0.08)] md:grid-cols-2">
+          <div className="relative hidden min-h-[650px] overflow-hidden bg-[#242E52] p-10 text-white md:flex md:flex-col md:justify-between lg:p-14">
+            <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full border border-white/10" />
+            <div className="absolute -left-12 top-0 h-40 w-40 rounded-full border border-white/10" />
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-          <div>
-            <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-[#242E52]/70">
-              Full Name
-            </label>
-            <input
-              type="text"
-              required
-              placeholder="John Doe"
-              className="w-full rounded-lg border border-[#242E52]/20 bg-[var(--color-cream,#fdfbf7)] px-4 py-3 text-sm text-[#242E52] transition-colors focus:border-[#242E52] focus:outline-none"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
+            <div className="absolute -bottom-24 -right-24 h-64 w-64 rounded-full border border-white/10" />
+            <div className="absolute -bottom-8 right-0 h-40 w-40 rounded-full border border-white/10" />
+
+            <div className="relative z-10">
+              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-white/60">
+                Start your journey
+              </span>
+
+              <h2 className="mt-6 max-w-sm font-display text-5xl font-bold leading-[1.05] tracking-tight lg:text-6xl">
+                Your next
+                <br />
+                favorite
+                <br />
+                table awaits.
+              </h2>
+            </div>
+
+            <div className="relative z-10">
+              <div className="mb-5 h-px w-16 bg-white/30" />
+
+              <p className="max-w-sm text-sm leading-6 text-white/65">
+                Create an account to discover places, make reservations, and
+                keep everything in one place.
+              </p>
+            </div>
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-[#242E52]/70">
-              Email Address
-            </label>
-            <input
-              type="email"
-              required
-              placeholder="name@example.com"
-              className="w-full rounded-lg border border-[#242E52]/20 bg-[var(--color-cream,#fdfbf7)] px-4 py-3 text-sm text-[#242E52] transition-colors focus:border-[#242E52] focus:outline-none"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-            />
+          {/* Right side */}
+          <div className="flex items-center p-8 sm:p-12 lg:p-16">
+            <div className="w-full max-w-md">
+              {/* Mobile heading */}
+              <div className="mb-10 md:hidden">
+                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#242E52]/50">
+                  Start your journey
+                </span>
+
+                <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-[#242E52]">
+                  Create account
+                </h1>
+              </div>
+
+              {/* Desktop heading */}
+              <div className="hidden md:block">
+                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#242E52]/50">
+                  Welcome
+                </span>
+
+                <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-[#242E52] lg:text-5xl">
+                  Create an account.
+                </h1>
+
+                <p className="mt-3 text-sm leading-6 text-[#242E52]/60">
+                  Join us and make your next reservation easier.
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="mt-10 space-y-5">
+                {/* Name */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#242E52]/60">
+                    Full name
+                  </label>
+
+                  <input
+                    type="text"
+                    required
+                    placeholder="John Doe"
+                    className="w-full rounded-xl border border-[#242E52]/15 bg-[#f8f5ef]/60 px-4 py-3.5 text-sm text-[#242E52] placeholder:text-[#242E52]/35 transition-all duration-200 focus:border-[#242E52]/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#242E52]/5"
+                    value={form.name}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        name: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#242E52]/60">
+                    Email address
+                  </label>
+
+                  <input
+                    type="email"
+                    required
+                    placeholder="name@example.com"
+                    className="w-full rounded-xl border border-[#242E52]/15 bg-[#f8f5ef]/60 px-4 py-3.5 text-sm text-[#242E52] placeholder:text-[#242E52]/35 transition-all duration-200 focus:border-[#242E52]/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#242E52]/5"
+                    value={form.email}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        email: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#242E52]/60">
+                    Password
+                  </label>
+
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    className="w-full rounded-xl border border-[#242E52]/15 bg-[#f8f5ef]/60 px-4 py-3.5 text-sm text-[#242E52] placeholder:text-[#242E52]/35 transition-all duration-200 focus:border-[#242E52]/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#242E52]/5"
+                    value={form.password}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        password: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                {/* Error */}
+                {message && (
+                  <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+                    <p className="text-sm font-medium text-red-700">
+                      {message}
+                    </p>
+                  </div>
+                )}
+
+                {/* Button */}
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full rounded-xl bg-[#242E52] px-6 py-4 text-sm font-bold text-white transition-all duration-300 hover:bg-[#02499D] hover:shadow-lg hover:shadow-[#242E52]/15 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isLoading ? "Creating account..." : "Create account"}
+                </button>
+              </form>
+
+              {/* Divider */}
+              <div className="my-8 flex items-center gap-4">
+                <div className="h-px flex-1 bg-[#242E52]/10" />
+                <span className="text-xs text-[#242E52]/35">OR</span>
+                <div className="h-px flex-1 bg-[#242E52]/10" />
+              </div>
+
+              {/* Login */}
+              <p className="text-center text-sm text-[#242E52]/60">
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  className="font-bold text-[#242E52] underline decoration-[#242E52]/30 underline-offset-4 transition-colors hover:text-[#02499D] hover:decoration-[#02499D]"
+                >
+                  Sign in
+                </Link>
+              </p>
+
+              <p className="mt-8 text-center text-[11px] uppercase tracking-wider text-[#242E52]/30">
+                Reserve • Dine • Enjoy
+              </p>
+            </div>
           </div>
-
-          <div>
-            <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-[#242E52]/70">
-              Password
-            </label>
-            <input
-              type="password"
-              required
-              placeholder="••••••••"
-              className="w-full rounded-lg border border-[#242E52]/20 bg-[var(--color-cream,#fdfbf7)] px-4 py-3 text-sm text-[#242E52] transition-colors focus:border-[#242E52] focus:outline-none"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="mt-2 w-full rounded-full bg-[#242E52] px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-[#02499D]"
-          >
-            {isLoading ? "Creating account..." : "Sign up"}
-          </button>
-        </form>
-
-        {message && (
-          <p className="mt-4 text-center text-sm font-medium text-[#242E52]">
-            {message}
-          </p>
-        )}
-
-        <p className="mt-6 text-center text-sm text-[#242E52]/70">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="font-semibold text-[#242E52] underline hover:text-[#02499D]"
-          >
-            Sign in
-          </Link>
-        </p>
-      </section>
+        </div>
+      </div>
     </div>
   );
 }
