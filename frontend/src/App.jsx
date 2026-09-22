@@ -10,6 +10,7 @@ import Signup from "./pages/signUp";
 import { AuthProvider } from "./context/authContext";
 import ProtectedRoute from "./components/protectedRoute";
 import MyReservations from "./pages/myReservations";
+import NotFound from "./pages/not-found";
 
 export default function App() {
   return (
@@ -38,7 +39,7 @@ export default function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          {/* <Route path="/profile" element={<Profile />} /> */}
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </AuthProvider>
