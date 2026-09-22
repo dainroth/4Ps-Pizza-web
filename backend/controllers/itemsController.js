@@ -1,8 +1,25 @@
 import itemsModel from "../modals/itemsModal.js";
 
-// 1. Create Item
+// 1. Create Item(s) — handles single object OR array of objects
 export const createItems = async (req, res, next) => {
   try {
+    const isBulk = Array.isArray(req.body);
+
+    if (isBulk) {
+      // Bulk insert — used for seeding multiple items at once
+      const itemsToInsert = req.body.map((item) => ({
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        category: item.category,
+        image: item.image || item.imageUrl,
+      }));
+
+      const saved = await itemsModel.insertMany(itemsToInsert);
+      return res.status(201).json(saved);
+    }
+
+    // Single item —
     const { name, description, price, category, image, imageUrl } = req.body;
 
     const imagePath = req.file

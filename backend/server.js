@@ -7,6 +7,7 @@ import userRouter from "./routes/userRoute.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import itemRouter from "./routes/itemsRoute.js";
+import reservationRouter from "./routes/reservationRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -35,6 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/user", userRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/items", itemRouter);
+app.use("/api/reservations", reservationRouter);
 
 app.get("/", (req, res) => {
   res.send("API WORKING");

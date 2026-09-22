@@ -2,6 +2,12 @@ import userModal from "../modals/userModal.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import validator from "validator";
+
+// create token
+const createToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+};
+
 // login function
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -18,17 +24,15 @@ const loginUser = async (req, res) => {
     }
 
     const token = createToken(user._id);
-    res.json({ success: true, token });
+    res.json({
+      success: true,
+      token,
+      user: { name: user.name, email: user.email },
+    });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: "Error User Login" });
   }
-};
-
-// create token
-
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET);
 };
 
 // register function
@@ -72,7 +76,6 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // then its create new user
-
     const newUser = new userModal({
       name: displayName,
       email: email,
@@ -81,7 +84,11 @@ const registerUser = async (req, res) => {
 
     const user = await newUser.save();
     const token = createToken(user._id);
-    res.json({ success: true, token });
+    res.json({
+      success: true,
+      token,
+      user: { name: user.name, email: user.email },
+    });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: "Error User Sign in" });

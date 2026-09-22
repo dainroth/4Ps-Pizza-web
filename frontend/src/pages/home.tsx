@@ -3,6 +3,8 @@ import { MoveRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import UserRate from "./components/user-rate";
 import Menu from "./menu";
+import ReserverSeat from "./components/reserver-seat";
+import Visit from "./visit";
 
 export default function Home() {
   return (
@@ -105,6 +107,8 @@ export default function Home() {
       </section>
       <UserRate />
       <Menu />
+      <ReserverSeat />
+      <Visit />
     </div>
   );
 }

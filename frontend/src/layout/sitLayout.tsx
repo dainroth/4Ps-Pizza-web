@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { Outlet, Link, NavLink } from "react-router-dom";
+import { Outlet, Link, NavLink, useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/authContext";
+import Footer from "@/pages/footer";
 
 const navLinks = [
   { to: "/vision", label: "Story" },
@@ -10,6 +19,9 @@ const navLinks = [
 
 export default function SiteLayout() {
   const [isScroll, setIsScroll] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -23,7 +35,22 @@ export default function SiteLayout() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const textClass = isScroll ? "text-[var(--color-ink)]" : "text-white";
+  const textClass = isScroll ? "text-[#242E52]" : "text-white";
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .map((part) => part[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "?";
+
   return (
     <div className="min-h-screen flex flex-col">
       <header
@@ -56,33 +83,49 @@ export default function SiteLayout() {
           ))}
         </nav>
 
-        <Link
-          to="/login"
-          className={`text-sm border rounded-full px-4 py-2 transition-colors duration-300 ${
-            isScroll
-              ? "border-[var(--color-ink)] text-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-parchment)]"
-              : "border-white text-white hover:bg-white hover:text-black"
-          }`}
-        >
-          Sign in
-        </Link>
+        {isAuthenticated && user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-2 rounded-full bg-transparent border-none cursor-pointer">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-[#242E52] text-white text-xs font-semibold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <span className={`text-sm font-medium ${textClass}`}>
+                {user.name}
+              </span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuItem onClick={() => navigate("/reserve")}>
+                Reserve a table
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/my-reservations")}>
+                My reservations
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Link
+            to="/login"
+            className={`text-sm border rounded-full px-4 py-2 transition-colors duration-300 ${
+              isScroll
+                ? "border-[#242E52] text-[#242E52] hover:bg-[#242E52] hover:text-white"
+                : "border-white text-white hover:bg-white hover:text-[#242E52]"
+            }`}
+          >
+            Sign in
+          </Link>
+        )}
       </header>
 
       <main className="flex-1">
         <Outlet />
       </main>
 
-      <footer className="px-6 md:px-12 py-10 border-t border-[var(--color-ink)]/10 text-sm flex flex-col md:flex-row md:justify-between gap-4">
-        <p>&copy; {new Date().getFullYear()} Kravan. All rights reserved.</p>
-        <div className="flex gap-6">
-          <Link to="/visit" className="hover:text-[var(--color-clay)]">
-            Find us
-          </Link>
-          <a href="#" className="hover:text-[var(--color-clay)]">
-            Instagram
-          </a>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

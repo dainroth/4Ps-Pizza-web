@@ -1,13 +1,35 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "@/lib/auth";
+import { useAuth } from "@/context/authContext";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: call POST /auth/login once backend is built
-    console.log("Login:", form);
+    setMessage("");
+    setIsLoading(true);
+
+    try {
+      const data = await loginUser(form.email, form.password);
+
+      if (data.success && data.token && data.user) {
+        login(data.token, data.user);
+        navigate("/reserve");
+      } else {
+        setMessage(data.message || "Unable to log in.");
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage("Unable to connect to the server.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -17,7 +39,7 @@ export default function Login() {
           Welcome back
         </h1>
         <p className="mt-2 text-sm text-[#242E52]/70">
-          Sign in to access your reservations and account settings.
+          Sign in to manage your reservations.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
@@ -36,17 +58,9 @@ export default function Login() {
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#242E52]/70">
-                Password
-              </label>
-              <Link
-                to="/forgot-password"
-                className="text-xs text-[#242E52]/70 hover:text-[#02499D] hover:underline"
-              >
-                Forgot?
-              </Link>
-            </div>
+            <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-[#242E52]/70">
+              Password
+            </label>
             <input
               type="password"
               required
@@ -59,14 +73,21 @@ export default function Login() {
 
           <button
             type="submit"
+            disabled={isLoading}
             className="mt-2 w-full rounded-full bg-[#242E52] px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-[#02499D]"
           >
-            Sign in
+            {isLoading ? "Signing in..." : "Sign in"}
           </button>
         </form>
 
+        {message && (
+          <p className="mt-4 text-center text-sm font-medium text-[#242E52]">
+            {message}
+          </p>
+        )}
+
         <p className="mt-6 text-center text-sm text-[#242E52]/70">
-          No account?{" "}
+          Don't have an account?{" "}
           <Link
             to="/signup"
             className="font-semibold text-[#242E52] underline hover:text-[#02499D]"

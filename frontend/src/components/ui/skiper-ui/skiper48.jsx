@@ -13,50 +13,17 @@ import { cn } from "@/lib/utils";
 
 const Skiper48 = () => {
   const images = [
-    {
-      src: "/images/x.com/13.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
-    {
-      src: "/images/x.com/32.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
-    {
-      src: "/images/x.com/20.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
-    {
-      src: "/images/x.com/21.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
-    {
-      src: "/images/x.com/19.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
-    {
-      src: "/images/x.com/1.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
-    {
-      src: "/images/x.com/2.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
-    {
-      src: "/images/x.com/3.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
-    {
-      src: "/images/x.com/4.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
-    {
-      src: "/images/x.com/5.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
-    {
-      src: "/images/x.com/6.jpeg",
-      alt: "Illustrations by my fav AarzooAly",
-    },
+    { src: "/images/x.com/13.jpeg", alt: "Illustrations by my fav AarzooAly" },
+    { src: "/images/x.com/32.jpeg", alt: "Illustrations by my fav AarzooAly" },
+    { src: "/images/x.com/20.jpeg", alt: "Illustrations by my fav AarzooAly" },
+    { src: "/images/x.com/21.jpeg", alt: "Illustrations by my fav AarzooAly" },
+    { src: "/images/x.com/19.jpeg", alt: "Illustrations by my fav AarzooAly" },
+    { src: "/images/x.com/1.jpeg", alt: "Illustrations by my fav AarzooAly" },
+    { src: "/images/x.com/2.jpeg", alt: "Illustrations by my fav AarzooAly" },
+    { src: "/images/x.com/3.jpeg", alt: "Illustrations by my fav AarzooAly" },
+    { src: "/images/x.com/4.jpeg", alt: "Illustrations by my fav AarzooAly" },
+    { src: "/images/x.com/5.jpeg", alt: "Illustrations by my fav AarzooAly" },
+    { src: "/images/x.com/6.jpeg", alt: "Illustrations by my fav AarzooAly" },
   ];
 
   return (
@@ -76,6 +43,8 @@ const Carousel_002 = ({
   loop = true,
   autoplay = false,
   spaceBetween = 40,
+  renderItem,
+  slideClassName,
 }) => {
   const css = `
   .Carousal_002 {
@@ -86,10 +55,7 @@ const Carousel_002 = ({
     <motion.div
       initial={{ opacity: 0, translateY: 20 }}
       animate={{ opacity: 1, translateY: 0 }}
-      transition={{
-        duration: 0.3,
-        delay: 0.5,
-      }}
+      transition={{ duration: 0.3, delay: 0.5 }}
       className={cn("relative w-full max-w-3xl", className)}
     >
       <style>{css}</style>
@@ -97,41 +63,34 @@ const Carousel_002 = ({
       <Swiper
         spaceBetween={spaceBetween}
         autoplay={
-          autoplay
-            ? {
-                delay: 1000,
-                disableOnInteraction: false,
-              }
-            : false
+          autoplay ? { delay: 1000, disableOnInteraction: false } : false
         }
         effect="cards"
         grabCursor={true}
         loop={loop}
-        pagination={
-          showPagination
-            ? {
-                clickable: true,
-              }
-            : false
-        }
+        pagination={showPagination ? { clickable: true } : false}
         navigation={
           showNavigation
-            ? {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-              }
+            ? { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
             : false
         }
         className="Carousal_002 h-[380px] w-[260px]"
         modules={[EffectCards, Autoplay, Pagination, Navigation]}
       >
         {images.map((image, index) => (
-          <SwiperSlide key={index} className="rounded-3xl">
-            <img
-              className="h-full w-full object-cover"
-              src={image.src}
-              alt={image.alt}
-            />
+          <SwiperSlide
+            key={index}
+            className={cn("rounded-3xl", slideClassName)}
+          >
+            {renderItem ? (
+              renderItem(image, index)
+            ) : (
+              <img
+                className="h-full w-full object-cover"
+                src={image.src}
+                alt={image.alt}
+              />
+            )}
           </SwiperSlide>
         ))}
         {showNavigation && (
@@ -150,20 +109,3 @@ const Carousel_002 = ({
 };
 
 export { Carousel_002 };
-
-/**
- * Skiper 48 Carousel_002 — React + Swiper
- * Built with Swiper.js - Read docs to learn more https://swiperjs.com/
- * Illustrations by AarzooAly - https://x.com/AarzooAly
- *
- * License & Usage:
- * - Free to use and modify in both personal and commercial projects.
- * - Attribution to Skiper UI is required when using the free version.
- * - No attribution required with Skiper UI Pro.
- *
- * Feedback and contributions are welcome.
- *
- * Author: @gurvinder-singh02
- * Website: https://gxuri.me
- * Twitter: https://x.com/Gur__vi
- */
